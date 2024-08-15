@@ -44,7 +44,7 @@ def get_labels(self, img_path):
     label_path = image_to_label(img_path=img_path)
     with open(label_path) as f:
         label, x, y, w, h = f.readline().split(" ")[:5]
-        return label, x, y, w, h
+    return label, x, y, w, h
     
     # takes xywh norm 
 def plot(img: np.array, labels: list): 

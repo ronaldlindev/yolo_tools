@@ -9,7 +9,10 @@ class yololoader:
             self.data = yaml.load(f)
         self.img_idx = 0
         self.dir_idx = 0
-        self.dirs = self.data['train']
+        # find all image dirs
+                
+
+
 
     def __iter__(self):
         return self
