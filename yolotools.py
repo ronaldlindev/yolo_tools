@@ -1,11 +1,16 @@
 import os
 from pathlib import Path
-
+from typing import Iterable
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
 
+
+# a generator that batches an input list
+def batch(input: Iterable, batch_size):
+    for i in range(0, len(input), batch_size):
+        yield input[i:i + batch_size]
 
 # for working with yolo formatted data
 
@@ -24,6 +29,12 @@ def to_xywh(x1, y1, x2, y2):
     h = y2 - y1
     return x, y, w, h
 
+def to_xywhn(x1, y1, x2, y2, img_height, img_width):
+    x = (x1 + x2) / 2.0
+    y = (y1 + y2) / 2.0
+    w = x2 - x1
+    h = y2 - y1
+    return x / img_width, y / img_height, w / img_width, h / img_height
 def to_xyxy(x, y, w, h):
     x1 = x - w / 2
     y1 = y - h / 2
@@ -33,12 +44,15 @@ def to_xyxy(x, y, w, h):
 
 
 ## given absolute path to an image, find its corresponding label
-def image_to_label(img_path: str) -> str:
-    p = Path(img_path)
+def image_to_label(p: Path) -> Path:
     ds_path = Path(*p.parts[:-2])
     img_name = str(p.parts[-1])
     return ds_path.joinpath('labels', img_name[:-3] + 'txt')
 
+def label_to_image(p: Path) -> Path:
+    ds_path = Path(*p.parts[:-2])
+    img_name = str(p.parts[-1])
+    return ds_path.joinpath('images', img_name[:-3] + 'txt')
 
 def get_labels(self, img_path):
     label_path = image_to_label(img_path=img_path)
